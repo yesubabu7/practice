@@ -1,120 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Home</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-</head>
-<body>
-<label>Enter Emp ID : </label>
-<input type="text" id="emp-id">
-
-
-<button id="get-emp">Get Employee</button>
-<div id="emp-list"></div>
-
-
- <form id="addEmployee" method="post">
-        <input type="text" id="empIdInput" placeholder="Employee ID">
-        <input type="text" id="empNameInput" placeholder="Employee Name">
-        <input type="text" id="deptNoInput" placeholder="deptNo">
-        <input type="text" id="jobInput" placeholder="job">
-        <input type="text" id="salaryInput" placeholder="salary">
- 
-  <button type="button" id="addButton">Add Employee</button>
-    </form>
-
-<script>
-
-
-
-
 $(document).ready(function() {
-	
-	
+    $("#addButton").on("click", function() {
+        const empId = $("#empIdInput").val();
+        const empName = $("#empNameInput").val();
+        const deptNo = $("#deptNoInput").val();
+        const salary = $("#salaryInput").val();
+        const job = $("#jobInput").val();
 
-   document.getElementById("addEmployee").addEventListener("submit",function(event){
-	   
- 
-    
-    addButton.on("click", function() {
-        const empId = parseInt(empIdInput.val());
-        const empName = empNameInput.val();
-        const deptNo = deptNoInput.val();
-        const salry = salaryInput.val();
-        const job = jobInput.val();
-
-       
-		console.log(empId);
-
-        // Create an object to hold the employee data
         const employeeData = {
             id: empId,
             name: empName,
-            deptNo:deptNo,
-            salary:salary,
-            job:job
+            deptNo: deptNo,
+            salary: salary,
+            job: job
         };
 
-        // Send the data to the servlet using an AJAX request
         $.ajax({
             url: "employees",
             method: "POST",
-            data: employeeData,
+            data: JSON.stringify(employeeData),
+            contentType: "application/json",
             success: function(response) {
-                // Handle the success response
-                console.log("Employee data added successfully"+response);
+                console.log("Employee data added successfully", response);
             },
             error: function(xhr, status, error) {
-                // Handle the error response
                 console.error("Error adding employee data:", error);
             }
         });
     });
-    
-    
-    
-    $("#get-emp").on("click",()=>{
-    	var empId = $("#emp-id").val();
-    	var url = "employees/" + empId;
-    	$.ajax({
-    	    url: url,
-    	    method: "GET",
-    	    success: function (response) {
-    	    	console.log(response);
-    	    }
-    	});
+
+    $("#get-emp").on("click", function() {
+        var empId = $("#emp-id").val();
+        var url = "employees/" + empId;
+        $.ajax({
+            url: url,
+            method: "GET",
+            success: function(response) {
+                console.log(response);
+            }
+        });
     });
-       
 
     $.ajax({
         url: "/employees",
         method: "GET",
-        success: function (employees) {
-        	console.log(employees);
-        	employees.forEach((employee)=>{
-        		$("#emp-list").append(
-        			$("<li>").text(employee.ename)		
-        		);
-        		
-//         		var empList = document.getElementById("emp-list");
-//         		var newListElement = document.createElement("li");
-//         		newListElement.innerText = employee.ename;
-//         		empList.appendChild(newListElement);
-        	});
+        success: function(employees) {
+            console.log(employees);
+            employees.forEach((employee) => {
+                $("#emp-list").append(
+                    $("<li>").text(employee.ename)
+                );
+            });
         }
     });
-
-   
-
-
-
-    
-})
 });
-
-</script>
-
-
-</body>
-</html>
